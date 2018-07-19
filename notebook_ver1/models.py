@@ -347,25 +347,12 @@ class CDecisionTree(object):
     def treeConstruct(self,X,D,h):
         h=h+1;
         if(D==[]):
-            #print('data in none')
+            print('data in none')
             return None
         if((X==[]) or (h==self.hmax)):
             label=self.popyvalue_select(D,self.yindex)
             leafnode=CDLeafNode(label)
             return leafnode
-        #dchange=D[:,self.zindex].toarray().flatten().tolist()
-        first=D[0,self.yindex]
-        k=0
-        for tuple in D:
-            #print('tuple',tuple[:,self.yindex].toarray()[0,0])
-            #print('first',first)
-            if(tuple[:,self.yindex].toarray()[0,0]!=first):
-                k=1
-                break
-        if(k==0):
-            leafnode=CDLeafNode(first)
-            return leafnode
-        #select the most probability y value and return
         maxindex =X[0]
         paValue=self.gain_Z(D,X[0])
         #paValue=self.PAMH(D,X[0])
@@ -381,6 +368,11 @@ class CDecisionTree(object):
             #leafnode=CDLeafNode(label)
             #return leafnode
         subset=self.split_subset(D,maxindex)
+        if(len(subset)==1):
+            label=self.popyvalue_select(subset[list(subset.keys())[0]],-2)
+            leafnode=CDLeafNode(label)
+            print('leafnode')
+            return leafnode
         X.remove(maxindex)
         nonode=CDTreeNode(h,maxindex)
         for key in subset:
